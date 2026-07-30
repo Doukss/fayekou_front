@@ -1,0 +1,12 @@
+import { Link } from 'react-router-dom'
+import PublicHeader from '../components/layout/PublicHeader.jsx'
+
+const features = [['Encaissements', 'Enregistrez chaque loyer et visualisez vos recettes en un coup d’œil.'], ['Relances automatiques', 'Préparez des rappels WhatsApp avant et après chaque échéance.'], ['Pilotage clair', 'Repérez les impayés, les retards et les actions à mener.']]
+
+export default function LandingPage() {
+  return <><PublicHeader /><main>
+    <section className="hero"><div><p className="eyebrow">GESTION LOCATIVE, SÉNÉGAL</p><h1>Vos loyers. <em>Sans les relances.</em></h1><p className="lead">KërguiPa aide les agences à suivre leurs locataires, encaissements et impayés, sans tableur compliqué.</p><div className="actions"><Link className="button" to="/register">Créer mon compte agence</Link><a className="text-link" href="#fonctionnalites">Découvrir KërguiPa →</a></div><p className="note">Gratuit jusqu’à 10 locataires · Sans carte bancaire</p></div><aside className="hero-card"><p className="muted">JUILLET 2026</p><h2>Votre agence, aujourd’hui</h2><div className="metrics"><div><span>Attendu</span><strong>750 000 F</strong></div><div><span>Collecté</span><strong className="success">430 000 F</strong></div><div><span>À relancer</span><strong className="accent">2 locataires</strong></div></div><div className="activity"><span>●</span><p><b>Mame Diop</b><small>Paiement reçu · 250 000 F</small></p><time>Il y a 2 h</time></div></aside></section>
+    <section id="fonctionnalites" className="section"><p className="eyebrow">TOUT À SA PLACE</p><h2>Le registre de loyers pensé pour votre agence.</h2><div className="feature-grid">{features.map(([title, text], index) => <article key={title}><span className="number">0{index + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section>
+    <section id="tarifs" className="pricing"><div><p className="eyebrow">UNE OFFRE SIMPLE</p><h2>Commencez gratuitement.</h2><p>Faites grandir votre portefeuille, KërguiPa grandit avec vous.</p></div><article><p className="muted">PLAN DÉMARRAGE</p><strong>0 F <small>/ mois</small></strong><ul><li>Jusqu’à 10 locataires</li><li>Suivi des encaissements</li><li>Relances personnalisées</li></ul><Link className="button" to="/register">Créer mon compte</Link></article></section>
+  </main><footer><span className="brand"><i>Kër</i>guiPa</span><p>Le suivi de loyers, simplement.</p></footer></>
+}
