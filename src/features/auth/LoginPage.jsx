@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import Button from '../../components/ui/Button.jsx'
-import { useAuth } from '../../context/AuthContext.jsx'
+import Button from '../../shared/ui/Button/Button.jsx'
+import { useAuth } from './model/AuthContext.jsx'
 import AuthLayout from './AuthLayout.jsx'
 
 export default function LoginPage() {
