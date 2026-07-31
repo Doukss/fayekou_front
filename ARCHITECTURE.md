@@ -35,3 +35,13 @@ dépend d'aucune feature.
 Les accès aux données sont isolés dans `features/*/api`. Pour brancher le
 backend, remplacez le repository local concerné par des requêtes HTTP : les
 composants et hooks restent inchangés.
+
+## Stack applicative
+
+- **Zustand** : état des locataires persisté localement et synchronisé entre
+  les onglets grâce à l'événement `storage`.
+- **React Hook Form + Zod** : gestion et validation stricte des formulaires
+  d'authentification et de création de locataire.
+- **Recharts** : graphiques composés et graphique circulaire interactif du
+  tableau de bord.
+- **date-fns** : calcul et libellé des échéances et retards de paiement.

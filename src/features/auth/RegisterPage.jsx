@@ -1,11 +1,15 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import Button from '../../shared/ui/Button/Button.jsx'
-import { useAuth } from './model/AuthContext.jsx'
 import AuthLayout from './AuthLayout.jsx'
+import { useAuth } from './model/AuthContext.jsx'
+import { registerSchema } from './model/auth.schema.js'
 
 export default function RegisterPage() {
-  const { register } = useAuth(); const navigate = useNavigate(); const [form, setForm] = useState({ agencyName: '', email: '', phone: '', password: '' }); const [message, setMessage] = useState(''); const [loading, setLoading] = useState(false)
-  async function submit(event) { event.preventDefault(); setLoading(true); setMessage(''); try { await register(form); navigate('/dashboard') } catch (err) { setMessage(err.message) } finally { setLoading(false) } }
-  return <AuthLayout title="Créez votre agence" subtitle="Deux minutes suffisent pour démarrer." footer={<>Vous avez déjà un compte ? <Link to="/login">Se connecter</Link></>}><form onSubmit={submit}>{message && <p className="form-error">{message}</p>}<label>Nom de l’agence<input required value={form.agencyName} onChange={(e) => setForm({ ...form, agencyName: e.target.value })} placeholder="Ex. Teranga Immobilier" /></label><label>Email professionnel<input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="agence@exemple.sn" /></label><label>Téléphone WhatsApp<input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+221 77 000 00 00" /></label><label>Mot de passe<input required minLength="8" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="8 caractères minimum" /></label><Button disabled={loading} type="submit">{loading ? 'Création…' : 'Créer mon compte'}</Button></form></AuthLayout>
+  const { register: createAccount } = useAuth(); const navigate = useNavigate(); const [message, setMessage] = useState('')
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({ resolver: zodResolver(registerSchema), defaultValues: { agencyName: '', email: '', phone: '', password: '' } })
+  async function submit(values) { setMessage(''); try { await createAccount(values); navigate('/dashboard') } catch (error) { setMessage(error.message) } }
+  return <AuthLayout title="Créez votre agence" subtitle="Deux minutes suffisent pour démarrer." footer={<>Vous avez déjà un compte ? <Link to="/login">Se connecter</Link></>}><form onSubmit={handleSubmit(submit)} noValidate>{message && <p className="form-error">{message}</p>}<label>Nom de l’agence<input placeholder="Ex. Teranga Immobilier" {...register('agencyName')} />{errors.agencyName && <small className="field-error">{errors.agencyName.message}</small>}</label><label>Email professionnel<input type="email" placeholder="agence@exemple.sn" {...register('email')} />{errors.email && <small className="field-error">{errors.email.message}</small>}</label><label>Téléphone WhatsApp<input type="tel" placeholder="+221 77 000 00 00" {...register('phone')} /></label><label>Mot de passe<input type="password" placeholder="8 caractères minimum" {...register('password')} />{errors.password && <small className="field-error">{errors.password.message}</small>}</label><Button disabled={isSubmitting} type="submit">{isSubmitting ? 'Création…' : 'Créer mon compte'}</Button></form></AuthLayout>
 }

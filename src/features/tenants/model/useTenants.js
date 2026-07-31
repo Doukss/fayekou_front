@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
-import { getTenants, saveTenants } from '../api/tenant.repository.js'
+import { useCallback } from 'react'
+import { useTenantStore } from './tenant.store.js'
 
 export function useTenants(agencyId) {
-  const [tenants, setTenants] = useState([])
-  useEffect(() => { if (agencyId) setTenants(getTenants(agencyId)) }, [agencyId])
-  const createTenant = useCallback((input) => { const tenant = { ...input, id: crypto.randomUUID(), rent: Number(input.rent), status: 'À relancer' }; setTenants((current) => { const next = [...current, tenant]; saveTenants(agencyId, next); return next }); return tenant }, [agencyId])
+  const tenants = useTenantStore((state) => state.tenantsByAgency[agencyId] ?? state.getTenants(agencyId))
+  const addTenant = useTenantStore((state) => state.createTenant)
+  const createTenant = useCallback((input) => addTenant(agencyId, input), [addTenant, agencyId])
   return { tenants, createTenant }
 }
