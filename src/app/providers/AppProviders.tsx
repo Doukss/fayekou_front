@@ -1,8 +1,9 @@
-import { AuthProvider } from '../../features/auth/model/AuthContext.jsx'
 import { useEffect } from 'react'
-import { startTenantStoreSync } from '../../features/tenants/model/tenant.store.js'
+import type { ReactNode } from 'react'
+import { AuthProvider } from '@/features/auth'
+import { startTenantStoreSync } from '@/features/tenants'
 
-export default function AppProviders({ children }) {
+export default function AppProviders({ children }: { children: ReactNode }) {
   useEffect(() => startTenantStoreSync(), [])
   return <AuthProvider>{children}</AuthProvider>
 }

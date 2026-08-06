@@ -1,4 +1,7 @@
-const icons = {
+import type { AgencySession } from '@/features/auth/model/types'
+import type { ReactNode } from 'react'
+
+const icons: Record<string, ReactNode> = {
   overview: (
     <>
       <rect x="4" y="4" width="6" height="6" rx="1" />
@@ -33,42 +36,48 @@ const icons = {
       <path d="M19.4 15a1.5 1.5 0 0 0 .3 1.9l.1.1-2 2-.1-.1a1.5 1.5 0 0 0-1.9-.3 1.5 1.5 0 0 0-1 1.5v.2h-2.8v-.2a1.5 1.5 0 0 0-1-1.5 1.5 1.5 0 0 0-1.9.3l-.1.1-2-2 .1-.1a1.5 1.5 0 0 0 .3-1.9 1.5 1.5 0 0 0-1.5-1H5.7V11h.2a1.5 1.5 0 0 0 1.5-1 1.5 1.5 0 0 0-.3-1.9L7 8l2-2 .1.1a1.5 1.5 0 0 0 1.9.3 1.5 1.5 0 0 0 1-1.5v-.2h2.8v.2a1.5 1.5 0 0 0 1 1.5 1.5 1.5 0 0 0 1.9-.3l.1-.1 2 2-.1.1a1.5 1.5 0 0 0-.3 1.9 1.5 1.5 0 0 0 1.5 1h.2v2.8h-.2a1.5 1.5 0 0 0-1.5 1Z" />
     </>
   ),
-};
+}
 
-function SidebarIcon({ name }) {
+interface SidebarIconProps {
+  name: string
+}
+
+function SidebarIcon({ name }: SidebarIconProps) {
   return (
     <svg
       viewBox="0 0 24 24"
       aria-hidden="true"
       style={{
-        width: "26px",
-        height: "26px",
+        width: '26px',
+        height: '26px',
         flexShrink: 0,
-        fill: "white",
-        stroke: "gray",
+        fill: 'white',
+        stroke: 'gray',
         strokeWidth: 1.5,
       }}
     >
       {icons[name]}
     </svg>
-  );
+  )
 }
 
-export default function DashboardSidebar({
-  agency,
-  activeItem,
-  onNavigate,
-  onLogout,
-}) {
-  const items = [
-    { label: "Vue d’ensemble", icon: "overview" },
-    { label: "Locataires", icon: "tenants" },
-    { label: "Encaissements", icon: "payments" },
-    { label: "Relances", icon: "reminders" },
-  ];
+interface DashboardSidebarProps {
+  agency: AgencySession
+  activeItem: string
+  onNavigate: (item: string) => void
+  onLogout: () => void
+}
+
+export default function DashboardSidebar({ agency, activeItem, onNavigate, onLogout }: DashboardSidebarProps) {
+  const items: { label: string; icon: string }[] = [
+    { label: "Vue d'énsemble", icon: 'overview' },
+    { label: 'Locataires', icon: 'tenants' },
+    { label: 'Encaissements', icon: 'payments' },
+    { label: 'Relances', icon: 'reminders' },
+  ]
 
   return (
-    <aside style={{ width: "250px", minWidth: "250px" }}>
+    <aside style={{ width: '250px', minWidth: '250px' }}>
       <div>
         <p className="brand">
           <span>Kër</span>guiPay
@@ -79,15 +88,15 @@ export default function DashboardSidebar({
       <nav>
         {items.map((item) => (
           <button
-            className={activeItem === item.label ? "active" : ""}
+            className={activeItem === item.label ? 'active' : ''}
             onClick={() => onNavigate(item.label)}
             key={item.label}
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              width: "100%",
-              color: "white",
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              width: '100%',
+              color: 'white',
             }}
           >
             <SidebarIcon name={item.icon} />
@@ -97,14 +106,14 @@ export default function DashboardSidebar({
       </nav>
       <div className="sidebar-settings">
         <button
-          className={activeItem === "Paramètres" ? "active" : ""}
-          onClick={() => onNavigate("Paramètres")}
+          className={activeItem === 'Paramètres' ? 'active' : ''}
+          onClick={() => onNavigate('Paramètres')}
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            width: "100%",
-            color: "blue",
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            width: '100%',
+            color: 'blue',
           }}
         >
           <SidebarIcon name="settings" />
@@ -121,5 +130,5 @@ export default function DashboardSidebar({
         </div>
       </div>
     </aside>
-  );
+  )
 }

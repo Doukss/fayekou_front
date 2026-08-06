@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import PublicHeader from '../../widgets/public-header/PublicHeader.jsx'
+import { PublicHeader } from '@/widgets/public-header'
 
 const features = [
   { icon: '↗', title: 'Encaissements centralisés', text: 'Suivez chaque paiement, quel que soit le bien ou le locataire.' },

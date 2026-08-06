@@ -1,11 +1,29 @@
 import { useMemo, useState } from 'react'
 import { Bar, CartesianGrid, Cell, ComposedChart, Legend, Line, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { formatCfa } from '../../../shared/lib/formatters.js'
+import { formatCfa } from '@/shared/lib/formatters'
+import type { DashboardMetrics } from '@/features/dashboard/model/types'
+
+interface MonthlyData { month: string; expected: number; collected: number }
+interface StatusData { name: string; value: number }
+
+interface DashboardChartsProps {
+  metrics: DashboardMetrics
+}
 
 const colors = ['#4cae7a', '#e0655d', '#c9a24b']
-export default function DashboardCharts({ metrics }) {
-  const [activeIndex, setActiveIndex] = useState(null)
-  const monthlyData = useMemo(() => [{ month: 'Avr.', expected: Math.round(metrics.expected * .78), collected: Math.round(metrics.collected * .8) }, { month: 'Mai', expected: Math.round(metrics.expected * .85), collected: Math.round(metrics.collected * .9) }, { month: 'Juin', expected: Math.round(metrics.expected * .92), collected: Math.round(metrics.collected * .95) }, { month: 'Juil.', expected: metrics.expected, collected: metrics.collected }], [metrics])
-  const statusData = [{ name: 'Collecté', value: metrics.collected }, { name: 'Impayés', value: metrics.unpaid }, { name: 'À suivre', value: metrics.late }]
-  return <section className="chart-grid"><article className="chart-card"><div><h2>Encaissements</h2><p>Évolution des quatre derniers mois.</p></div><ResponsiveContainer width="100%" height={250}><ComposedChart data={monthlyData}><CartesianGrid stroke="rgba(255,255,255,.08)" vertical={false} /><XAxis dataKey="month" stroke="#929299" tickLine={false} axisLine={false} /><YAxis stroke="#929299" tickLine={false} axisLine={false} tickFormatter={(value) => `${Math.round(value / 1000)}k`} /><Tooltip contentStyle={{ background: '#1d1d20', border: '1px solid rgba(255,255,255,.11)' }} formatter={(value) => formatCfa(value)} /><Legend /><Bar dataKey="expected" name="Attendu" fill="#c9a24b" radius={[5, 5, 0, 0]} /><Line type="monotone" dataKey="collected" name="Collecté" stroke="#4cae7a" strokeWidth={3} /></ComposedChart></ResponsiveContainer></article><article className="chart-card"><div><h2>Répartition</h2><p>{activeIndex === null ? 'Survolez une part pour le détail.' : `${statusData[activeIndex].name} : ${formatCfa(statusData[activeIndex].value)}`}</p></div><ResponsiveContainer width="100%" height={250}><PieChart><Pie data={statusData} dataKey="value" nameKey="name" innerRadius={58} outerRadius={88} paddingAngle={3} onMouseEnter={(_, index) => setActiveIndex(index)} onMouseLeave={() => setActiveIndex(null)}>{statusData.map((entry, index) => <Cell key={entry.name} fill={colors[index]} opacity={activeIndex === null || activeIndex === index ? 1 : .45} />)}</Pie><Tooltip formatter={(value) => formatCfa(value)} /><Legend /></PieChart></ResponsiveContainer></article></section>
+
+export default function DashboardCharts({ metrics }: DashboardChartsProps) {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const monthlyData: MonthlyData[] = useMemo(() => [
+    { month: 'Avr.', expected: Math.round(metrics.expected * .78), collected: Math.round(metrics.collected * .8) },
+    { month: 'Mai', expected: Math.round(metrics.expected * .85), collected: Math.round(metrics.collected * .9) },
+    { month: 'Juin', expected: Math.round(metrics.expected * .92), collected: Math.round(metrics.collected * .95) },
+    { month: 'Juil.', expected: metrics.expected, collected: metrics.collected },
+  ], [metrics])
+  const statusData: StatusData[] = [
+    { name: 'Collecté', value: metrics.collected },
+    { name: 'Impayés', value: metrics.unpaid },
+    { name: 'À suivre', value: metrics.late },
+  ]
+  return <section className="chart-grid"><article className="chart-card"><div><h2>Encaissements</h2><p>Évolution des quatre derniers mois.</p></div><ResponsiveContainer width="100%" height={250}><ComposedChart data={monthlyData}><CartesianGrid stroke="rgba(255,255,255,.08)" vertical={false} /><XAxis dataKey="month" stroke="#929299" tickLine={false} axisLine={false} /><YAxis stroke="#929299" tickLine={false} axisLine={false} tickFormatter={(value) => `${Math.round(value / 1000)}k`} /><Tooltip contentStyle={{ background: '#1d1d20', border: '1px solid rgba(255,255,255,.11)' }} formatter={(value) => formatCfa(Number(value))} /><Legend /><Bar dataKey="expected" name="Attendu" fill="#c9a24b" radius={[5, 5, 0, 0]} /><Line type="monotone" dataKey="collected" name="Collecté" stroke="#4cae7a" strokeWidth={3} /></ComposedChart></ResponsiveContainer></article><article className="chart-card"><div><h2>Répartition</h2><p>{activeIndex === null ? 'Survolez une part pour le détail.' : `${statusData[activeIndex].name} : ${formatCfa(statusData[activeIndex].value)}`}</p></div><ResponsiveContainer width="100%" height={250}><PieChart><Pie data={statusData} dataKey="value" nameKey="name" innerRadius={58} outerRadius={88} paddingAngle={3} onMouseEnter={(_, index) => setActiveIndex(index)} onMouseLeave={() => setActiveIndex(null)}>{statusData.map((entry, index) => <Cell key={entry.name} fill={colors[index]} opacity={activeIndex === null || activeIndex === index ? 1 : .45} />)}</Pie><Tooltip formatter={(value) => formatCfa(Number(value))} /><Legend /></PieChart></ResponsiveContainer></article></section>
 }
