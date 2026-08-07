@@ -1,4 +1,4 @@
-import type { AgencySession } from '@/features/auth/model/types'
+import type { UserSession } from '@/features/auth/model/types'
 import type { ReactNode } from 'react'
 
 const icons: Record<string, ReactNode> = {
@@ -62,7 +62,7 @@ function SidebarIcon({ name }: SidebarIconProps) {
 }
 
 interface DashboardSidebarProps {
-  agency: AgencySession
+  agency: UserSession
   activeItem: string
   onNavigate: (item: string) => void
   onLogout: () => void
@@ -82,8 +82,8 @@ export default function DashboardSidebar({ agency, activeItem, onNavigate, onLog
         <p className="brand">
           <span>Kër</span>guiPay
         </p>
-        <p className="agency-name">{agency.agencyName}</p>
-        <span className="plan">PLAN DÉMARRAGE</span>
+        <p className="agency-name">{agency.name}</p>
+        <span className="plan">{agency.plan || 'PLAN DÉMARRAGE'}</span>
       </div>
       <nav>
         {items.map((item) => (
@@ -121,9 +121,9 @@ export default function DashboardSidebar({ agency, activeItem, onNavigate, onLog
         </button>
       </div>
       <div className="profile">
-        <b>{agency.agencyName.slice(0, 2).toUpperCase()}</b>
+        <b>{(agency.name || 'AG').slice(0, 2).toUpperCase()}</b>
         <div>
-          <strong>{agency.agencyName}</strong>
+          <strong>{agency.name}</strong>
           <button onClick={onLogout}>
             Se déconnecter
           </button>

@@ -18,13 +18,38 @@ export const useTenantStore = create<TenantStore>()(
       getTenants: (agencyId: string) => get().tenantsByAgency[agencyId] ?? initialTenants,
       createTenant: (agencyId: string, payload: CreateTenantInput) => set((state) => {
         const current = state.tenantsByAgency[agencyId] ?? initialTenants
-        const tenant: Tenant = { ...payload, id: crypto.randomUUID(), rent: Number(payload.rent), status: 'En attente' }
+        const tenant: Tenant = { 
+          ...payload, 
+          id: crypto.randomUUID(), 
+          rent: Number(payload.rent), 
+          status: 'En attente' 
+        }
         return { tenantsByAgency: { ...state.tenantsByAgency, [agencyId]: [...current, tenant] } }
       }),
       deleteTenant: (agencyId: string, tenantId: string) => set((state) => {
         const current = state.tenantsByAgency[agencyId] ?? initialTenants
         return { tenantsByAgency: { ...state.tenantsByAgency, [agencyId]: current.filter((tenant) => tenant.id !== tenantId) } }
       }),
+      updateTenant: (agencyId: string, tenantId: string, payload: CreateTenantInput) => set((state) => {
+        const current = state.tenantsByAgency[agencyId] ?? initialTenants
+        const updated = current.map((t) => 
+          t.id === tenantId 
+            ? { ...t, ...payload, rent: Number(payload.rent) } 
+            : t
+        )
+        return { tenantsByAgency: { ...state.tenantsByAgency, [agencyId]: updated } }
+      }),
+      togglePaymentStatus: (agencyId: string, tenantId: string) => set((state) => {
+        const current = state.tenantsByAgency[agencyId] ?? initialTenants
+        const updated = current.map((t) => {
+          if (t.id === tenantId) {
+            const nextStatus: 'Payé' | 'En attente' = t.status === 'Payé' ? 'En attente' : 'Payé'
+            return { ...t, status: nextStatus }
+          }
+          return t
+        })
+        return { tenantsByAgency: { ...state.tenantsByAgency, [agencyId]: updated } }
+      })
     }),
     { name: STORE_NAME, storage: createJSONStorage(() => localStorage) }
   )

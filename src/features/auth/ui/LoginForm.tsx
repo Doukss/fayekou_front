@@ -19,8 +19,12 @@ export default function LoginForm() {
   async function submit(values: LoginInput) {
     setMessage('')
     try {
-      await login(values)
-      navigate('/dashboard')
+      const session = await login(values)
+      if (session.role === 'superadmin') {
+        navigate('/admin')
+      } else {
+        navigate('/dashboard')
+      }
     } catch (error: unknown) {
       setMessage(error instanceof Error ? error.message : 'Une erreur est survenue.')
     }

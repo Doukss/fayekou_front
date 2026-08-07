@@ -19,4 +19,6 @@ export interface TenantStore {
   getTenants: (agencyId: string) => Tenant[]
   createTenant: (agencyId: string, payload: CreateTenantInput) => void
   deleteTenant: (agencyId: string, tenantId: string) => void
+  updateTenant: (agencyId: string, tenantId: string, payload: CreateTenantInput) => void
+  togglePaymentStatus: (agencyId: string, tenantId: string) => void
 }
